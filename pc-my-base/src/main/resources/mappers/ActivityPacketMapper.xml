@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pconline.pcloud.base.dao.ActivityPacketMapper" >
+  <resultMap id="BaseResultMap" type="cn.pconline.pcloud.base.entity.ActivityPacket" >
+    <constructor >
+      <idArg column="activity_packet_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="activity_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="packet_amount" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    activity_packet_id, activity_id, packet_amount, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.pconline.pcloud.base.entity.ActivityPacketExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from cy_activity_packet
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from cy_activity_packet
+    where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cy_activity_packet
+    where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.pconline.pcloud.base.entity.ActivityPacketExample" >
+    delete from cy_activity_packet
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.pconline.pcloud.base.entity.ActivityPacket" useGeneratedKeys="true" keyProperty="activityPacketId" >
+    insert into cy_activity_packet (activity_id, packet_amount, status
+      )
+    values (#{activityId,jdbcType=BIGINT}, #{packetAmount,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.pconline.pcloud.base.entity.ActivityPacket" useGeneratedKeys="true" keyProperty="activityPacketId" >
+    insert into cy_activity_packet
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="packetAmount != null" >
+        packet_amount,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="activityId != null" >
+        #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="packetAmount != null" >
+        #{packetAmount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.pconline.pcloud.base.entity.ActivityPacketExample" resultType="java.lang.Integer" >
+    select count(*) from cy_activity_packet
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update cy_activity_packet
+    <set >
+      <if test="record.activityPacketId != null" >
+        activity_packet_id = #{record.activityPacketId,jdbcType=BIGINT},
+      </if>
+      <if test="record.activityId != null" >
+        activity_id = #{record.activityId,jdbcType=BIGINT},
+      </if>
+      <if test="record.packetAmount != null" >
+        packet_amount = #{record.packetAmount,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update cy_activity_packet
+    set activity_packet_id = #{record.activityPacketId,jdbcType=BIGINT},
+      activity_id = #{record.activityId,jdbcType=BIGINT},
+      packet_amount = #{record.packetAmount,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.pconline.pcloud.base.entity.ActivityPacket" >
+    update cy_activity_packet
+    <set >
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="packetAmount != null" >
+        packet_amount = #{packetAmount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.pconline.pcloud.base.entity.ActivityPacket" >
+    update cy_activity_packet
+    set activity_id = #{activityId,jdbcType=BIGINT},
+      packet_amount = #{packetAmount,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT}
+    where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
+  </update>
+  <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+    insert into cy_activity_packet(activity_id, packet_amount, status)
+    values
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.activityId}, #{item.packetAmount}, #{item.status})
+    </foreach>
+  </insert>
+</mapper>

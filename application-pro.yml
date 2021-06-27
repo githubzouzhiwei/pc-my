@@ -1,0 +1,79 @@
+debug: false
+server:
+  port: 9051
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:14001/cy_doctor?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CTT&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: cydoctor
+    password: cydoctorhlx!#1002
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jackson:
+    default-property-inclusion: NON_NULL
+  thymeleaf:
+    cache: false                                           
+    enabled: true
+  application:
+    name: pc_my_admin                                          
+  servlet:
+    multipart:
+      max-file-size: 50MB                    
+      max-request-size: 50MB                
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env
+    autoconfig:
+      enabled: false
+  endpoint:
+    health:
+      show-details: never 
+    shutdown:
+
+
+app:
+  domain: http://ex.5cy.cn/              
+  wap:
+    domain: http://ex.5cy.cn/             
+deepcare:
+  domain: http://api.deepcare.com
+  app:
+    id: 2c7ee204-869c-49d0-a291-c7cbc8a6547c
+    secret: 98DBFA0189899106D936F3E4F6399F62
+wx:
+  app:
+    id: wx376ee1a241c0c823
+    secret: b5626fea7cad3cf3550bfb9f08e81a66
+sys:                                                       
+  proxy:
+    ip: 192.168.11.254
+    port: 8080
+  authServer: http://192.168.10.213:8080
+  authUri: https://192.168.10.213:8443/security-server/auth.do
+  file:
+    path: /data/chunya/pdf/
+
+mybatis:
+  type-aliases-package: cn.pconline.pcloud.base.entity
+  configuration:
+    map-underscore-to-camel-case: true 
+  mapper-locations: classpath*:mappers/*.xml,classpath*:mappers/*/*.xml
+
+
+logging:
+  level:
+     cn.pconline.pcloud.base.dao : debug
+
+pagehelper.helper-dialect: mysql
+pagehelper.params-count: countSql
+pagehelper.reasonable: false
+pagehelper.support-methods-arguments: true
+
+mapper:
+    mappers: cn.pconline.pcloud.base.util.MyMapper
+    not-empty: false
+    identity: MYSQL
+ 
+
+

@@ -1,0 +1,94 @@
+debug: true
+server:
+  port: 9041                                               #端口
+spring:
+  datasource:                                               #数据源配置
+    url: jdbc:mysql://192.168.75.99:3307/pc_dexi?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CTT&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: pc_dexi
+    password: pc_dexi
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jackson:
+    default-property-inclusion: NON_NULL                    #接口字段为空忽略
+  thymeleaf:
+    cache: false                                            #开发时务必为false
+    enabled: true
+  application:
+    name: pc_my_admin                                           #为spring应用命名
+  servlet:
+    multipart:
+      max-file-size: 50MB                    #单个文件上传的大小限制
+      max-request-size: 50MB                 #单次文件上传的大小限制
+  # Redis 配置
+  redis:
+    ## Redis数据库索引（默认为0）
+    database: 0
+    ## Redis服务器地址
+    host: 134.175.232.38
+    ## Redis服务器连接端口
+    port: 7140
+    ## Redis服务器连接密码（默认为空）
+    password: weiya_1004
+    ## 连接超时时间（毫秒）
+    timeout: 5000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env
+    autoconfig:
+      enabled: false
+  endpoint:
+    health:
+      show-details: never #关闭监控服务
+    shutdown:
+
+
+################## 应用配置  ###################
+app:
+  domain: http://local.pconline.com.cn:9041/                #pc端域名 http://ex.5cy.cn/
+  wap:
+    domain: http://local.pconline.com.cn:9041/             #wap端域名
+wx:
+  app:
+    id: wx376ee1a241c0c823
+    secret: b5626fea7cad3cf3550bfb9f08e81a66
+  mini:
+    id: wxaf5f5317a6c5276f
+    secret: 12cc4f5baf1b75527df795587f37a740
+sys:                                                        #应用代理
+  proxy:
+    ip: 192.168.11.254
+    port: 8080
+  authServer: http://192.168.10.213:8080
+  authUri: https://192.168.10.213:8443/security-server/auth.do
+  file:
+    path: d:/data/chunya/pdf/
+    cwebp: d:/data/META-INF/libwebp-0.4.1-rc1-windows-x64/bin/cwebp.exe
+    quality: 75
+
+#集成mybatis框架新增
+mybatis:
+  type-aliases-package: cn.pconline.pcloud.base.entity
+  configuration:
+    map-underscore-to-camel-case: true # 驼峰命名规范 如：数据库字段是  order_id 那么 实体字段就要写成 orderId
+  mapper-locations: classpath*:mappers/*.xml,classpath*:mappers/*/*.xml #配置mybatis xml配置文件
+
+###设置打印mybatis SQL语句
+logging:
+  level:
+     cn.pconline.pcloud.base.dao : debug
+########## 分页插件 ##########
+pagehelper.helper-dialect: mysql
+pagehelper.params-count: countSql
+pagehelper.reasonable: false
+pagehelper.support-methods-arguments: true
+
+########## 通用mapper ##########
+mapper:
+    mappers: cn.pconline.pcloud.base.util.MyMapper
+    not-empty: false
+    identity: MYSQL
+ 
+
+

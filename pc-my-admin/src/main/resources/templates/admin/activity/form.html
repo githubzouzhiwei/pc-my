@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>活动详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" th:href="@{/static/css/font.css}">
+    <link rel="stylesheet" th:href="@{/static/css/xadmin.css}">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form" lay-filter="activityForm" style="margin-top:10px;">
+            <input type="hidden" name="activityId" th:value="${entity?.activityId}"/>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>基本信息</legend>
+            </fieldset>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>活动名称</label>
+                <div class="layui-input-inline" style="width:300px;">
+                    <input type="text" name="name" lay-verify="name" th:value="${entity?.name}" placeholder="请输入活动名称" autocomplete="off" class="layui-input" maxlength="16">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>活动时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="startTime" name="startTime" lay-verify="startTime" th:value="${#dates.format(entity?.startTime, 'yyyy-MM-dd HH:mm:ss')}" placeholder="开始时间" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">至</div>
+                <div class="layui-input-inline">
+                    <input type="text" id="endTime" name="endTime" lay-verify="endTime" th:value="${#dates.format(entity?.endTime, 'yyyy-MM-dd HH:mm:ss')}" placeholder="结束时间" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>活动电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="contactNumber" lay-verify="contactNumber" placeholder="活动电话" th:value="${entity?.contactNumber}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>报名链接</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="applyUrl" lay-verify="applyUrl" placeholder="报名链接" th:value="${entity?.applyUrl}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>报名文案</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="applyTitle" lay-verify="applyTitle" placeholder="报名文案" th:value="${entity?.applyTitle}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>报名按钮</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="applyButtonBtn">上传图片</button>
+                    <input type="hidden" name="applyButtonUrl" th:value="${entity?.applyButtonUrl}" />
+                    <img id="applyButtonImg" th:src="${entity?.applyButtonUrl}" alt="报名按钮" width="80" height="30">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>报名LOGO</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="applyLogoBtn">上传图片</button>
+                    <input type="hidden" name="applyLogoUrl" th:value="${entity?.applyLogoUrl}" />
+                    <img id="applyLogoImg" th:src="${entity?.applyLogoUrl}" alt="报名LOGO" width="50" height="50">
+                </div>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>红包设置</legend>
+            </fieldset>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>活动经费</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="funds" lay-verify="funds" th:value="${entity?.funds == null ? '' : entity?.funds / 100.0}" placeholder="请输入活动经费（单位：元）" onchange="changeFunds(this)" th:style="${entity?.activityId == null ? '' : 'background-color:#c9c9c9;'}" th:disabled="${entity?.activityId != null}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>红包数量</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="packetNum" lay-verify="packetNum" th:value="${entity?.packetNum}" placeholder="请输入红包数量" onchange="changePacketNum(this)" th:style="${entity?.activityId == null ? '' : 'background-color:#c9c9c9;'}" th:disabled="${entity?.activityId != null}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold">红包类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="packetType" lay-filter="packetType" value="1" title="固定金额" th:checked="${entity?.packetType == null || entity?.packetType == 1}" th:disabled="${entity?.activityId != null}">
+                    <input type="radio" name="packetType" lay-filter="packetType" value="2" title="随机金额" th:checked="${entity?.packetType == 2}" th:disabled="${entity?.activityId != null}">
+                    <input type="radio" name="packetType" lay-filter="packetType" value="3" title="指定红包金额及数量" th:checked="${entity?.packetType == 3}" th:disabled="${entity?.activityId != null}">
+                </div>
+            </div>
+            <div class="layui-form-item packetAmount" th:style="${entity?.packetType == null || entity?.packetType == 1 ? '' : 'display:none;'}">
+                <label class="layui-form-label setbold">红包金额</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="packetAmount" th:value="${entity?.packetAmount == null ? '' : entity?.packetAmount / 100.0}" class="layui-input" style="background-color:#c9c9c9;" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item packetAmount" id="packetType2" th:style="${entity?.packetType == 2 ? '' : 'display:none;'}">
+                <label class="layui-form-label setbold">红包金额</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="minPacketAmount" lay-verify="minPacketAmount" th:value="${entity?.minPacketAmount == null ? '' : entity?.minPacketAmount / 100.0}" placeholder="最小金额（单位：元）" onchange="changeMinPacketAmount(this)" th:style="${entity?.activityId == null ? '' : 'background-color:#c9c9c9;'}" th:disabled="${entity?.activityId != null}" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">至</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="maxPacketAmount" lay-verify="maxPacketAmount" th:value="${entity?.maxPacketAmount == null ? '' : entity?.maxPacketAmount / 100.0}" placeholder="最大金额（单位：元）" onchange="changeMaxPacketAmount(this)" th:style="${entity?.activityId == null ? '' : 'background-color:#c9c9c9;'}" th:disabled="${entity?.activityId != null}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="packetAmount" th:style="${entity?.packetType == 3 ? '' : 'display:none;'}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <span style="margin-right:10px;" id="remainPacketInfo" th:text="|剩余经费：${entity?.remainFunds == null ? 0 : entity?.remainFunds / 100.0} 剩余红包：${entity?.remainPacketNum?:0}|"></span>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label setbold">指定红包</label>
+                    <div class="layui-input-block" th:if="${entity?.activityId == null}">
+                        <div class="layui-form-mid" style="padding: 8px 0!important;">金额</div>
+                        <div class="layui-input-inline">
+                            <input type="text" id="configPacketAmount" placeholder="红包金额（单位：元）" onchange="changeConfigPacketAmount(this)" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid" style="padding: 8px 0!important;">数量</div>
+                        <div class="layui-input-inline">
+                            <input type="text" id="configPacketNum" placeholder="红包数量" onchange="changeConfigPacketNum(this)" autocomplete="off" class="layui-input">
+                        </div>
+                        <button type="button" class="layui-btn" onclick="addConfigPacket()">添加</button>
+                    </div>
+                    <div id="configPacket">
+                        <div class="layui-input-block" th:each="packetConfig: ${packetConfigs}">
+                            <div class="layui-form-mid" style="padding: 8px 0!important;">金额</div>
+                            <div class="layui-input-inline">
+                                <input type="text" th:value="${packetConfig.packetAmount / 100.0}" class="layui-input" style="background-color: #c9c9c9;" disabled>
+                            </div>
+                            <div class="layui-form-mid" style="padding: 8px 0!important;">数量</div>
+                            <div class="layui-input-inline">
+                                <input type="text" th:value="${packetConfig.packetNum}" class="layui-input" style="background-color: #c9c9c9;" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label setbold">剩余经费</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="remainFundsAllocType" value="1" title="平均分配" th:checked="${entity?.remainFundsAllocType == null || entity?.remainFundsAllocType == 1}" th:disabled="${entity?.activityId != null}">
+                        <input type="radio" name="remainFundsAllocType" value="2" title="随机分配" th:checked="${entity?.remainFundsAllocType == 2}" th:disabled="${entity?.activityId != null}">
+                    </div>
+                </div>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>参与限制</legend>
+            </fieldset>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold">停留时间</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="isSetStayTime" value="0" title="不限制" th:checked="${entity?.isSetStayTime == null || entity?.isSetStayTime == 0}">
+                    <input type="radio" name="isSetStayTime" value="1" title="设置时间" th:checked="${entity?.isSetStayTime == 1}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold"><span class="x-red">*</span>页面停留</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="stayTime" lay-verify="stayTime" th:value="${entity?.stayTime}" placeholder="请输入整数" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">秒</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold">参与地区</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="isSetJoinArea" value="0" title="不限制" th:checked="${entity?.isSetJoinArea == null || entity?.isSetJoinArea == 0}">
+                    <input type="radio" name="isSetJoinArea" value="1" title="设置区域" th:checked="${entity?.isSetJoinArea == 1}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold">选择地区</label>
+                <button type="button" class="layui-btn" onclick="addArea()" style="margin-bottom:8px;">添加</button>
+                <div class="layui-input-block" id="area">
+                    <button type="button" class="layui-btn layui-btn-primary" style="margin-bottom:8px;margin-left:0;margin-right:4px;" th:each="item: ${#strings.arraySplit(entity?.joinArea,',')}"><span th:text="${item}"></span><i class="layui-icon layui-icon-delete" onclick="deleteArea(this)"></i></button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label setbold">是否需要关注</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="isNeedFollow" value="0" title="否" th:checked="${entity?.isNeedFollow == null || entity?.isNeedFollow == 0}">
+                    <input type="radio" name="isNeedFollow" value="1" title="是" th:checked="${entity?.isNeedFollow == 1}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left:110px;">
+                    <button class="layui-btn layui-btn-lg" lay-submit="" lay-filter="save">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="configPacketTpl">
+    <div class="layui-input-block">
+        <div class="layui-form-mid" style="padding: 8px 0!important;">金额</div>
+        <div class="layui-input-inline">
+            <input type="text" name="configPacketAmount" value="{{d.configPacketAmount}}" class="layui-input" style="background-color: #c9c9c9;" disabled>
+        </div>
+        <div class="layui-form-mid" style="padding: 8px 0!important;">数量</div>
+        <div class="layui-input-inline">
+            <input type="text" name="configPacketNum" value="{{d.configPacketNum}}" class="layui-input" style="background-color: #c9c9c9;" disabled>
+        </div>
+        <button type="button" class="layui-btn layui-btn-danger" onclick="deleteConfigPacket(this, {{d.configPacketAmount}}, {{d.configPacketNum}})">删除</button>
+    </div>
+</script>
+<script type="text/html" id="selectAreaTpl">
+    <div id="area-picker" class="layui-form layui-form-item" style="height:110px;margin-bottom:0;">
+        <div style="margin:10px 10px 0;">
+            <select name="province" class="province-selector" lay-filter="province-1"></select>
+        </div>
+        <div style="margin:10px 10px 0;">
+            <select name="city" class="city-selector" lay-filter="city-1"></select>
+        </div>
+        <div style="margin:10px 10px 0;">
+            <select name="county" class="county-selector" lay-filter="county-1"></select>
+        </div>
+    </div>
+</script>
+<script type="text/javascript" th:src="@{/static/lib/layui/layui.js}" charset="utf-8"></script>
+<script type="text/javascript" th:src="@{/static/js/xadmin.js}"></script>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script th:inline="javascript">
+    var selectedAreas = JSON.parse('[[${#strings.arraySplit(entity?.joinArea?:\'\',\',\')}]]');
+    var remainFunds = 0;// 剩余经费
+    var remainPacketNum = 0;// 剩余红包
+</script>
+<script>
+    layui.config({base: '[[@{/}]]static/js/extend/'}).use(['form', 'layer', 'laydate', 'upload', 'layarea_lc', 'laytpl'], function () {
+        var $ = layui.jquery, form = layui.form, laydate = layui.laydate, upload = layui.upload, layarea_lc = layui.layarea_lc, laytpl = layui.laytpl;
+
+        // 上传报名按钮图片
+        upload.render({
+            elem: '#applyButtonBtn',
+            url: '[[@{/}]]admin/activity/upload',
+            accept: 'file',
+            exts: 'jpg|png|gif|webp|jpeg',
+            done: function(res) {
+                if (res.code == 0) {
+                    $('#applyButtonImg').attr('src', res.msg);
+                    $('input[name=applyButtonUrl]').val(res.msg);
+                    layer.msg('上传成功');
+                } else {
+                    layer.msg(res.msg + "，请使用IP地址上传!");
+                }
+            },error: function() {
+                layer.msg('发生异常，请使用IP地址上传!');
+            }
+        });
+
+        // 上传报名LOGO
+        upload.render({
+            elem: '#applyLogoBtn',
+            url: '[[@{/}]]admin/activity/upload',
+            accept: 'file',
+            exts: 'jpg|png|gif|webp|jpeg',
+            done: function(res) {
+                if (res.code == 0) {
+                    $('#applyLogoImg').attr('src', res.msg);
+                    $('input[name=applyLogoUrl]').val(res.msg);
+                    layer.msg('上传成功');
+                } else {
+                    layer.msg(res.msg + "，请使用IP地址上传!");
+                }
+            },error: function() {
+                layer.msg('发生异常，请使用IP地址上传!');
+            }
+        });
+
+        // 修改活动经费
+        window.changeFunds = function(obj) {
+            // 清空已配置的红包
+            $('#configPacket').html('');
+            // 清空随机金额
+            $('input[name=minPacketAmount]').val('');
+            $('input[name=maxPacketAmount]').val('');
+
+            var funds = $(obj).val().trim();
+            var regex = /^[1-9][0-9]*$/;
+            if (funds && !regex.test(funds)) {
+                layer.msg('活动经费请输入大于0的整数');
+                $('input[name=funds]').val('');
+                return;
+            }
+            // 计算红包金额
+            calculatePacketAmount();
+        };
+
+        // 修改红包数量
+        window.changePacketNum = function(obj) {
+            // 清空已配置的红包
+            $('#configPacket').html('');
+            // 清空随机金额
+            $('input[name=minPacketAmount]').val('');
+            $('input[name=maxPacketAmount]').val('');
+
+            var packetNum = $(obj).val().trim();
+            var regex = /^[1-9][0-9]*$/;
+            if (packetNum && !regex.test(packetNum)) {
+                layer.msg('红包数量请输入大于0的整数');
+                $('input[name=packetNum]').val('');
+                return;
+            }
+
+            // 计算红包金额
+            calculatePacketAmount();
+        };
+
+        // 计算红包金额
+        window.calculatePacketAmount = function() {
+            var funds = $('input[name=funds]').val().trim();
+            var packetNum = $('input[name=packetNum]').val().trim();
+
+            // 计算固定金额
+            if (funds && packetNum) {
+                var averagePacketAmount = funds / packetNum;
+                averagePacketAmount = averagePacketAmount.toFixed(2);
+
+                $('input[name=packetAmount]').val(averagePacketAmount);
+            } else {
+                $('input[name=packetAmount]').val('');
+            }
+
+            // 更新剩余经费、剩余红包数
+            if (funds) {
+                remainFunds = funds;
+            }
+            if (packetNum) {
+                remainPacketNum = packetNum;
+            }
+            $('#remainPacketInfo').text('剩余经费：' + remainFunds + ' 剩余红包：' + remainPacketNum);
+        };
+
+        // 最小金额
+        window.changeMinPacketAmount = function(obj) {
+            // 判断活动经费和红包数量是否填写
+            var funds = $('input[name=funds]').val().trim();
+            if (!funds) {
+                layer.msg('请先填写活动经费');
+                $(obj).val('');
+                return;
+            }
+            var packetNum = $('input[name=packetNum]').val().trim();
+            if (!packetNum) {
+                layer.msg('请先填写红包数量');
+                $(obj).val('');
+                return;
+            }
+
+            var minPackerAmount = $(obj).val().trim();
+            var regex = /^[0-9]*\.*[0-9]+$/;
+            if (minPackerAmount) {
+                if (!regex.test(minPackerAmount)) {
+                    layer.msg('请输入大于0的数字');
+                    $(obj).val('');
+                    return;
+                } else if (parseFloat(minPackerAmount) <= 0) {
+                    layer.msg('请输入大于0的数字');
+                    $(obj).val('');
+                    return;
+                }
+            }
+
+            // 最小金额需小于平均金额
+            var averagePacketAmount = funds / packetNum;
+            averagePacketAmount = averagePacketAmount.toFixed(2);
+            if (parseFloat(minPackerAmount) >= averagePacketAmount) {
+                layer.msg('请输入小于' + averagePacketAmount + '的金额');
+                $(obj).val('');
+                return;
+            }
+
+            $(obj).val(parseFloat(minPackerAmount));
+        };
+
+        // 最大金额
+        window.changeMaxPacketAmount = function(obj) {
+            // 判断活动经费和红包数量是否填写
+            var funds = $('input[name=funds]').val().trim();
+            if (!funds) {
+                layer.msg('请先填写活动经费');
+                $(obj).val('');
+                return;
+            }
+            var packetNum = $('input[name=packetNum]').val().trim();
+            if (!packetNum) {
+                layer.msg('请先填写红包数量');
+                $(obj).val('');
+                return;
+            }
+
+            var maxPackerAmount = $(obj).val().trim();
+            var regex = /^[0-9]*\.*[0-9]+$/;
+            if (maxPackerAmount) {
+                if (!regex.test(maxPackerAmount)) {
+                    layer.msg('请输入大于0的数字');
+                    $(obj).val('');
+                    return;
+                } else if (parseFloat(maxPackerAmount) <= 0) {
+                    layer.msg('请输入大于0的数字');
+                    $(obj).val('');
+                    return;
+                }
+            }
+
+            // 最大金额需大于平均金额
+            var averagePacketAmount = funds / packetNum;
+            averagePacketAmount = averagePacketAmount.toFixed(2);
+            if (parseFloat(maxPackerAmount) <= averagePacketAmount) {
+                layer.msg('请输入大于' + averagePacketAmount + '的金额');
+                $(obj).val('');
+                return;
+            }
+
+            $(obj).val(parseFloat(maxPackerAmount));
+        };
+
+        // 指定红包金额
+        window.changeConfigPacketAmount = function(obj) {
+            var configPacketAmount = $(obj).val().trim();
+            if (!configPacketAmount) {
+                return;
+            }
+            var regex = /^[0-9]*\.*[0-9]+$/;
+            if (!regex.test(configPacketAmount)) {
+                layer.msg('请输入大于0的数字');
+                $(obj).val('');
+                return;
+            }
+            if (parseFloat(configPacketAmount) <= 0) {
+                layer.msg('请输入大于0的数字');
+                $(obj).val('');
+                return;
+            }
+            configPacketAmount = parseFloat(configPacketAmount);
+            configPacketAmount = configPacketAmount.toFixed(2);
+            $(obj).val(configPacketAmount);
+        };
+
+        // 指定红包数量
+        window.changeConfigPacketNum = function(obj) {
+            var changeConfigPacketNum = $(obj).val();
+            if (!changeConfigPacketNum) {
+                return;
+            }
+            var regex = /^[1-9][0-9]*$/;
+            if (!regex.test(changeConfigPacketNum)) {
+                layer.msg('红包数量请输入大于0的整数');
+                $(obj).focus();
+            }
+        };
+
+        // 添加配置红包
+        window.addConfigPacket = function() {
+            // 判断活动经费和红包数量是否填写
+            var funds = $('input[name=funds]').val().trim();
+            if (!funds) {
+                layer.msg('请先填写活动经费');
+                $('input[name=funds]').focus();
+                return;
+            }
+            var packetNum = $('input[name=packetNum]').val().trim();
+            if (!packetNum) {
+                layer.msg('请先填写红包数量');
+                $('input[name=packetNum]').focus();
+                return;
+            }
+
+            // 判断红包金额和数量的积是否超过剩余经费
+            var configPacketAmount = $('#configPacketAmount').val().trim();
+            if (!configPacketAmount) {
+                layer.msg('请输入红包金额');
+                $('#configPacketAmount').focus();
+                return;
+            }
+
+            var regex = /^[0-9]*\.?[0-9]+$/;
+            if (!regex.test(configPacketAmount)) {
+                layer.msg('红包金额请输入大于0的数字');
+                $('#configPacketAmount').focus();
+                return;
+            } else if (parseFloat(configPacketAmount) <= 0) {
+                layer.msg('红包金额请输入大于0的数字');
+                $('#configPacketAmount').focus();
+                return;
+            }
+
+            if (parseFloat(configPacketAmount) > remainFunds) {
+                layer.msg('红包金额不可超过剩余经费');
+                $('#configPacketAmount').focus();
+                return;
+            }
+
+            var configPacketNum = $('#configPacketNum').val().trim();
+            if (!configPacketNum) {
+                layer.msg('请输入红包数量');
+                $('#configPacketNum').focus();
+                return;
+            }
+
+            regex = /^[1-9][0-9]*$/;
+            if (!regex.test(configPacketNum)) {
+                layer.msg('红包数量请输入大于0的整数');
+                $('#configPacketNum').focus();
+                return;
+            }
+
+            if (parseInt(configPacketNum) > remainPacketNum) {
+                layer.msg('红包数量不可超过剩余红包数');
+                $('#configPacketNum').focus();
+                return;
+            }
+
+            if (configPacketAmount * configPacketNum > remainFunds) {
+                layer.msg('红包金额不可超过剩余经费');
+                return;
+            }
+
+            laytpl($('#configPacketTpl').html()).render({configPacketAmount: configPacketAmount, configPacketNum: configPacketNum}, function(html) {
+                $('#configPacket').append(html);
+            });
+
+            // 更新剩余经费和剩余红包数
+            remainFunds = remainFunds - configPacketAmount;
+            remainPacketNum = remainPacketNum - configPacketNum;
+            $('#remainPacketInfo').text('剩余经费：' + remainFunds + ' 剩余红包：' + remainPacketNum);
+        };
+
+        // 删除配置红包
+        window.deleteConfigPacket = function(obj, configPacketAmount, configPacketNum) {
+            remainFunds = remainFunds + configPacketAmount;
+            remainPacketNum = remainPacketNum + configPacketNum;
+            $('#remainPacketInfo').text('剩余经费：' + remainFunds + ' 剩余红包：' + remainPacketNum);
+            $(obj).parent().remove();
+        };
+
+        // 添加区域
+        window.addArea = function() {
+            var selectedArea = '';
+            layer.open({
+                type: 1,
+                title: '选择地区',
+                btn: ['确定', '取消'],
+                content: $('#selectAreaTpl').html(),
+                offset: '100px',
+                success: function(layero, index) {
+                    // 这里因为内容过少, 会被遮挡, 所以简单修改了下样式
+                    document.getElementById('layui-layer' + index).getElementsByClassName('layui-layer-content')[0].style.overflow = 'unset';
+                    layarea_lc.render({
+                        elem: '#area-picker',
+                        name: 'name',//不填均为code类型
+                        data: {
+                            province: '',
+                            city: '',
+                            county: ''
+                        },
+                        change: function (res) {
+                            selectedArea = res.province;
+                            if (res.province != res.city) {
+                                selectedArea += res.city;
+                            }
+                            selectedArea += res.county;
+                        }
+                    });
+                },
+                yes: function(index, layero) {
+                    if (!selectedArea) {
+                        layer.msg('请选择区域');
+                        return;
+                    }
+                    if (selectedAreas.indexOf(selectedArea) > -1) {
+                        layer.msg('该区域已选择');
+                        return;
+                    }
+                    selectedAreas.push(selectedArea);
+                    $('#area').append('<button type="button" class="layui-btn layui-btn-primary" style="margin-bottom:8px;margin-left:0;margin-right:4px;">'+ selectedArea + '<i class="layui-icon layui-icon-delete" onclick="deleteArea(this)"></i></button>');
+                    layer.close(index);
+                }
+            });
+        };
+
+        // 删除区域
+        window.deleteArea = function(obj) {
+            layer.confirm('是否确定删除？', function (index) {
+                var area = $(obj).parent().text();
+                var i = selectedAreas.indexOf(area);
+                if (i > -1) {
+                    selectedAreas.splice(i, 1);
+                }
+                $(obj).parent().remove();
+                layer.close(index);
+            });
+        };
+
+        // 开始时间
+        laydate.render({elem: '#startTime', type: 'datetime', trigger: 'click'});
+        // 结束时间
+        laydate.render({elem: '#endTime', type: 'datetime', trigger: 'click'});
+
+        form.on('radio(packetType)', function(data) {
+            $('.packetAmount').hide();
+            $('.packetAmount')[data.value - 1].style = 'display:block;';
+        });
+
+        //表单验证
+        form.verify({
+            name: function (value) {
+                if (value.length === 0) {
+                    return '请输入活动名称';
+                }
+            },
+            startTime: function (value) {
+                if (value.length === 0) {
+                    return '请选择开始时间';
+                }
+                var endTime = $('#endTime').val();
+                if (endTime && value > endTime) {
+                    return '开始时间不能大于结束时间';
+                }
+            },
+            endTime: function (value) {
+                if (value.length === 0) {
+                    return '请选择结束时间';
+                }
+                var startTime = $('#startTime').val();
+                if (startTime && value < startTime) {
+                    return '结束时间不能小于开始时间';
+                }
+            },
+            contactNumber: function (value) {
+                if (value.length === 0) {
+                    return '请输入活动电话';
+                }
+                if (value.length > 20) {
+                    return '活动电话只能输入20个字符';
+                }
+            },
+            applyUrl: function (value) {
+                if (value.length === 0) {
+                    return '请填写报名链接';
+                }
+                if (value.length > 500) {
+                    return '报名链接只能填写500个字符';
+                }
+            },
+            applyTitle: function (value) {
+                if (value.length === 0) {
+                    return '请填写报名文案';
+                }
+                if (value.length > 255) {
+                    return '报名文案只能填写255个字符';
+                }
+            },
+            minPacketAmount: function(value) {
+                var packetType = $('input[name=packetType]:checked').val();
+                if (packetType == 2 && value.length === 0) {
+                    return '请输入最小金额';
+                }
+            },
+            maxPacketAmount: function(value) {
+                var packetType = $('input[name=packetType]:checked').val();
+                if (packetType == 2 && value.length === 0) {
+                    return '请输入最大金额';
+                }
+            },
+            funds: function (value) {
+                if (value.length === 0) {
+                    return '请填写活动经费';
+                }
+                if (!/^[0-9]*\.?[0-9]+$/.test(value)) {
+                    return '活动经费请填写数字';
+                }
+                if (parseFloat(value) <= 0) {
+                    return '活动经费需大于0';
+                }
+            },
+            packetNum: function (value) {
+                if (value.length === 0) {
+                    return '请填写红包数量';
+                }
+                if (!/^\d+$/.test(value)) {
+                    return '红包数量请填写整数';
+                }
+                if (value <= 0) {
+                    return '红包数量需大于0';
+                }
+            },
+            stayTime: function (value) {
+                var isSetStayTime = $('input[name=isSetStayTime]:checked').val();
+                if (isSetStayTime == 1) {
+                    if (value.length === 0) {
+                        return '请填写停留时间';
+                    }
+                    if (!/^\d+$/.test(value)) {
+                        return '停留时间请填写整数';
+                    }
+                    if (value <= 0) {
+                        return '停留时间需大于0';
+                    }
+                }
+            }
+        });
+
+        // 监听提交
+        form.on('submit(save)', function (data) {
+            var isSetJoinArea = $('input[name=isSetJoinArea]:checked').val();
+            if (isSetJoinArea == 1 && selectedAreas.length == 0) {
+                layer.msg('请选择参与地区');
+                return false;
+            }
+
+            var configPacketAmounts = [];
+            var configPacketNums = [];
+            // 判断指定红包及数量
+            var packetType = $('input[name=packetType]:checked').val();
+            if (packetType == 3) {
+                if (remainPacketNum == 0 && remainFunds > 0) {
+                    layer.msg('剩余经费无红包数可分配');
+                    return false;
+                }
+                $('input[name=configPacketAmount]').each(function () {
+                    configPacketAmounts.push($(this).val());
+                });
+                $('input[name=configPacketNum]').each(function () {
+                    configPacketNums.push($(this).val());
+                });
+
+                if (configPacketAmounts.length === 0 || configPacketNums.length === 0) {
+                    layer.msg('请添加指定的红包金额及数量');
+                    return false;
+                }
+                console.log(JSON.stringify(configPacketAmounts));
+                console.log(JSON.stringify(configPacketNums));
+            }
+
+            var _index = layer.load(1);  // 启用进度条
+
+            data.field.remainFunds = remainFunds;
+            data.field.remainPacketNum = remainPacketNum;
+            data.field.joinArea = selectedAreas.join(',');
+
+            for (var i = 0; i < configPacketAmounts.length; i++) {
+                data.field['configPacketAmounts[' + i + ']'] = configPacketAmounts[i];
+                data.field['configPacketNums[' + i + ']'] = configPacketNums[i];
+            }
+
+            $.ajax({
+                url: '[[@{/}]]admin/activity/save',
+                type: 'post',
+                data: data.field,
+                dataType: 'json',
+                success: function (result) {
+                    // 关闭进度条
+                    layer.close(_index);
+
+                    if (result.code === 0) {
+                        layer.alert("保存成功", {icon: 6}, function () {
+                            //关闭当前frame
+                            xadmin.close();
+                            //可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                    } else if (result.code === 1) {
+                        layer.alert("保存失败： " + result.msg, {icon: 5});
+                    } else if (result.code === 2) {
+                        layer.alert(result.msg, {icon: 5});
+                    }
+                },
+                error: function () {
+                    // 关闭进度条
+                    layer.close(_index);
+                    layer.alert("保存失败，请稍后再试", {icon: 5});
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

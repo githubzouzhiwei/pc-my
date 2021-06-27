@@ -1,0 +1,134 @@
+debug: true
+server:
+  port: 9052                                               #端口
+  #tomcat:
+    #min-spare-threads: 100
+    #max-threads: 256
+    #connection-timeout: 8000
+spring:
+  datasource:                                               #数据源配置
+    url: jdbc:mysql://192.168.75.99:3307/pc_dexi?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CTT&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: pc_dexi
+    password: pc_dexi
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jackson:
+    default-property-inclusion: NON_NULL                    #接口字段为空忽略
+  application:
+    name: pc_my_api                                           #为spring应用命名
+  # Redis 配置
+  redis:
+    ## Redis数据库索引（默认为0）
+    database: 0
+    ## Redis服务器地址
+    #host: 192.168.75.52
+    ## Redis服务器连接端口
+    #port: 6379
+    ## Redis服务器连接密码（默认为空）
+    password: test123456
+    ## 连接超时时间（毫秒）
+    timeout: 5000
+    cluster: 
+      nodes: 192.168.53.121:8001,192.168.53.121:8002,192.168.53.121:8003,192.168.53.121:8004,192.168.53.121:8005,192.168.53.121:8006
+      max-redirects: 2
+      max-attempts: 3
+    jedis:
+      pool:
+        ## 连接池最大连接数（使用负值表示没有限制）
+        max-active: 50
+        ## 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        ## 连接池中的最大空闲连接
+        max-idle: 8
+        ## 连接池中的最小空闲连接
+        min-idle: 0
+        
+#################### 注册中心 #########################
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.53.22:8001/eureka/,http://192.168.53.29:8001/eureka/
+    register-with-eureka: false #是否注册到注册中心
+    fetch-registry: false #是否从注册中心拉取注册服务列表
+    initial-instance-info-replication-interval-seconds: 2 #首次注册时间
+    registry-fetch-interval-seconds: 5  #客户端定时刷新本地缓存时间
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 15 # 如果现在超过了5秒的间隔（默认是90秒）
+################## 监控配置-按需配置 ##################
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"    # 可以单独启用health,info,metrics等，星号必须加双引号
+  server:
+    port: 9151
+    servlet:
+      context-path: /
+    ssl:
+      enabled: false
+  endpoint:
+    health:
+      show-details: always # never关闭健康监控服务
+    shutdown:
+      enabled: false
+################## 熔断配置 ####################
+hystrix:
+  command:
+    default:
+      fallback:
+        enabled: true  # 是否开启降级服务
+      circuitBreaker: 
+        enabled: true  # 是否开启熔断
+      requestCache: 
+        enabled: false # 设置是否缓存请求，request-scope内缓存
+      requestLog:
+        enabled: true  # 设置HystrixCommand执行和事件是否打印到HystrixRequestLog中
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000 #降级和熔断的超时时间
+  stream:
+    dashboard:
+      intervalInMilliseconds: 5000 #hystrix dashboard的信息收集频率，默认500毫秒
+
+################## 应用配置  ###################
+app:
+  domain:                                                   #pc端域名
+  wap:
+    domain:                                                 #wap端域名
+sys:                                                        #应用代理
+  proxy:
+    ip: 192.168.11.254
+    port: 8080
+  authServer: http://192.168.10.213:8080
+  authUri: https://192.168.10.213:8443/security-server/auth.do
+
+#集成mybatis框架新增
+mybatis:
+  type-aliases-package: cn.pconline.pcloud.base.entity
+  configuration:
+    map-underscore-to-camel-case: true # 驼峰命名规范 如：数据库字段是  order_id 那么 实体字段就要写成 orderId
+  mapper-locations: classpath*:mappers/*.xml,classpath*:mappers/*/*.xml #配置mybatis xml配置文件
+
+###设置打印mybatis SQL语句
+logging:
+  level:
+     cn.pconline.pcloud.base.dao : debug
+########## 分页插件 ##########
+pagehelper.helper-dialect: mysql
+pagehelper.params-count: countSql
+pagehelper.reasonable: false
+pagehelper.support-methods-arguments: true
+
+########## 通用mapper ##########
+mapper:
+    mappers: cn.pconline.pcloud.base.util.MyMapper
+    not-empty: false
+    identity: MYSQL
+######### 接口校验配置 ##########
+api: 
+  white: 
+    ips: 192.168.10.232,192.168.10.236
+  secret: xxxxx123
+  authEnable: false

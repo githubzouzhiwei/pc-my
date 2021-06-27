@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pconline.pcloud.base.dao.ActivityDetailMapper" >
+  <resultMap id="BaseResultMap" type="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    <constructor >
+      <idArg column="activity_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="share_title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="share_desc" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="share_pic_url" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="source" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="source_info" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    <constructor >
+      <idArg column="activity_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="share_title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="share_desc" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="share_pic_url" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="source" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="source_info" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    activity_id, share_title, share_desc, share_pic_url, source, source_info
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.pconline.pcloud.base.entity.ActivityDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from cy_activity_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.pconline.pcloud.base.entity.ActivityDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from cy_activity_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from cy_activity_detail
+    where activity_id = #{activityId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cy_activity_detail
+    where activity_id = #{activityId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.pconline.pcloud.base.entity.ActivityDetailExample" >
+    delete from cy_activity_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    insert into cy_activity_detail (activity_id, share_title, share_desc, 
+      share_pic_url, source, source_info, 
+      content)
+    values (#{activityId,jdbcType=BIGINT}, #{shareTitle,jdbcType=VARCHAR}, #{shareDesc,jdbcType=VARCHAR}, 
+      #{sharePicUrl,jdbcType=VARCHAR}, #{source,jdbcType=TINYINT}, #{sourceInfo,jdbcType=VARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    insert into cy_activity_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="shareTitle != null" >
+        share_title,
+      </if>
+      <if test="shareDesc != null" >
+        share_desc,
+      </if>
+      <if test="sharePicUrl != null" >
+        share_pic_url,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="sourceInfo != null" >
+        source_info,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="activityId != null" >
+        #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="shareTitle != null" >
+        #{shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="shareDesc != null" >
+        #{shareDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePicUrl != null" >
+        #{sharePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=TINYINT},
+      </if>
+      <if test="sourceInfo != null" >
+        #{sourceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.pconline.pcloud.base.entity.ActivityDetailExample" resultType="java.lang.Integer" >
+    select count(*) from cy_activity_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update cy_activity_detail
+    <set >
+      <if test="record.activityId != null" >
+        activity_id = #{record.activityId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shareTitle != null" >
+        share_title = #{record.shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shareDesc != null" >
+        share_desc = #{record.shareDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sharePicUrl != null" >
+        share_pic_url = #{record.sharePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=TINYINT},
+      </if>
+      <if test="record.sourceInfo != null" >
+        source_info = #{record.sourceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update cy_activity_detail
+    set activity_id = #{record.activityId,jdbcType=BIGINT},
+      share_title = #{record.shareTitle,jdbcType=VARCHAR},
+      share_desc = #{record.shareDesc,jdbcType=VARCHAR},
+      share_pic_url = #{record.sharePicUrl,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=TINYINT},
+      source_info = #{record.sourceInfo,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update cy_activity_detail
+    set activity_id = #{record.activityId,jdbcType=BIGINT},
+      share_title = #{record.shareTitle,jdbcType=VARCHAR},
+      share_desc = #{record.shareDesc,jdbcType=VARCHAR},
+      share_pic_url = #{record.sharePicUrl,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=TINYINT},
+      source_info = #{record.sourceInfo,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    update cy_activity_detail
+    <set >
+      <if test="shareTitle != null" >
+        share_title = #{shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="shareDesc != null" >
+        share_desc = #{shareDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="sharePicUrl != null" >
+        share_pic_url = #{sharePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=TINYINT},
+      </if>
+      <if test="sourceInfo != null" >
+        source_info = #{sourceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where activity_id = #{activityId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    update cy_activity_detail
+    set share_title = #{shareTitle,jdbcType=VARCHAR},
+      share_desc = #{shareDesc,jdbcType=VARCHAR},
+      share_pic_url = #{sharePicUrl,jdbcType=VARCHAR},
+      source = #{source,jdbcType=TINYINT},
+      source_info = #{sourceInfo,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where activity_id = #{activityId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.pconline.pcloud.base.entity.ActivityDetail" >
+    update cy_activity_detail
+    set share_title = #{shareTitle,jdbcType=VARCHAR},
+      share_desc = #{shareDesc,jdbcType=VARCHAR},
+      share_pic_url = #{sharePicUrl,jdbcType=VARCHAR},
+      source = #{source,jdbcType=TINYINT},
+      source_info = #{sourceInfo,jdbcType=VARCHAR}
+    where activity_id = #{activityId,jdbcType=BIGINT}
+  </update>
+</mapper>

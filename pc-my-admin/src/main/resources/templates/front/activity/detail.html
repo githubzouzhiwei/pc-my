@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title th:text="${activity?.name}"></title>
+    <meta name="description" th:content="${activity?.name}">
+    <meta name="keyword" th:content="${activity?.name}">
+    <meta name="author" content="">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="email=no" name="format-detection">
+    <meta content="yes" name="apple-themes-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <link rel="stylesheet" href="http://ex.5cy.cn/test/wxart/css/style.css" type="text/css">
+    <script src="http://ex.5cy.cn/common/wxApi.js"></script>
+</head>
+<body class="bg" style="background: #FFFFFF">
+<div class="g-doc">
+    <div id="content_div" style="background: #FFFFFF; margin-bottom: 61px">
+        <div class="page">
+            <div class="page__hd title_hd">
+                <h3 class="page__title" th:text="${activity?.name}"></h3>
+                <p class="page__desc desc">
+                    <span th:text="|${activityDetail?.source == 1 ? '原创' : '转载'}：${activityDetail?.sourceInfo?:''}|"></span>
+                    <span th:text="${#dates.format(activity?.createAt, 'yyyy-MM-dd')}"></span>
+                </p>
+            </div>
+            <div class="page__bd">
+                <!-- 内容 -->
+                <article class="article-content" th:utext="${activityDetail?.content}"></article>
+            </div>
+            <div class="page__ft article-browse">
+                <p>阅读 710</p>
+            </div>
+        </div>
+    </div>
+    <div class="fixBtm">
+        <div class="wrap">
+            <div class="logo"></div>
+            <div class="info">
+                <em th:text="${activity?.applyTitle}"></em>
+                <span>活动咨询</span>
+            </div>
+            <a class="call" href="tel:13929519859"><img src="http://ex.5cy.cn/test/wxart/images/plug-phone@2x.gif"></a>
+            <a th:href="${activity?.applyUrl}" class="btn-apply">申请登记</a>
+        </div>
+    </div>
+</div>
+<script src="http://ex.5cy.cn/test/wxart/js/zepto.js"></script>
+<script src="http://ex.5cy.cn/test/wxart/js/main.js"></script>
+</body>
+</html>

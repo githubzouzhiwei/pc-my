@@ -1,0 +1,26 @@
+1、用户授权绑定接口
+https://ex.5cy.cn/api/wx/auth?code=x123&state=chunya123&callback=aa
+作用：
+查询openid或体检报告
+入参：
+state 固定写chunya123 （要跟之前传给微信的一致）
+code 微信返回的编码
+回参：
+status 200成功，...
+msg 异常说明
+isFirst 1未绑定，0已绑定
+openid （非必须）
+data 体检报告列表（非必须）
+
+2、用户报告查询接口（首次绑定时使用）
+https://ex.5cy.cn/api/report?name=zxf&mobile=13500000000&date=2020-03-04&code=x123&openid=1&callback=aa
+入参:
+openid 需要跟code相对应
+code 同上
+回参：
+state 固定写chunya123 （要跟之前传给微信的一致）
+code 微信返回的编码
+回参：
+status 200成功，...
+msg 异常说明
+data 体检报告列表（非必须）
