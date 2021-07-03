@@ -74,6 +74,7 @@ public class ActivityController {
     public String detail(Long activityId, Model model) {
         if (activityId != null && activityId > 0) {
             ActivityDetail activityDetail = activityDetailService.find(activityId);
+            model.addAttribute("activityId", activityId);
             model.addAttribute("entity", activityDetail);
         }
         return "admin/activity/detail";
