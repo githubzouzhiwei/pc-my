@@ -1,16 +1,16 @@
 package cn.pconline.pcloud.base.entity;
 
-public class ActivityRecordKey {
+public class ActivityOpenidKey {
     private Integer activityId;
 
     private String openid;
 
-    public ActivityRecordKey(Integer activityId, String openid) {
+    public ActivityOpenidKey(Integer activityId, String openid) {
         this.activityId = activityId;
         this.openid = openid;
     }
 
-    public ActivityRecordKey() {
+    public ActivityOpenidKey() {
         super();
     }
 

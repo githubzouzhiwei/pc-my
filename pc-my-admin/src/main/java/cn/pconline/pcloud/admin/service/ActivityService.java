@@ -309,7 +309,12 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
     public void saveDetail(ActivitySaveDetailForm form) {
         Long activityId = form.getActivityId();
 
-        ActivityDetail activityDetail = activityDetailService.find(activityId);
+        ActivityDetail activityDetail = null;
+
+        if (activityId != null && activityId > 0) {
+            activityDetail = activityDetailService.find(activityId);
+        }
+
         if (activityDetail == null) {
             activityDetail = new ActivityDetail();
             activityDetail.setActivityId(activityId);

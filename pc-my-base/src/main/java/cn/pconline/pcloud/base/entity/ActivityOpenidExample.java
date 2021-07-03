@@ -3,14 +3,14 @@ package cn.pconline.pcloud.base.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityRecordExample {
+public class ActivityOpenidExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ActivityRecordExample() {
+    public ActivityOpenidExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

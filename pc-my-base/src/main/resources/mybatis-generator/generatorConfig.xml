@@ -92,8 +92,8 @@
         </table>-->
         <!--<table tableName="cy_activity_packet" domainObjectName="ActivityPacket" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <generatedKey column="activity_packet_id" sqlStatement="JDBC"/>
-        </table>
-        <table tableName="cy_activity_openid" domainObjectName="ActivityRecord" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>-->
+        <!--<table tableName="cy_activity_openid" domainObjectName="ActivityOpenid" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         </table>-->
 
     </context>

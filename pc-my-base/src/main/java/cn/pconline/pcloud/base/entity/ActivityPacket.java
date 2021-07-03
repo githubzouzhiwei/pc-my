@@ -1,8 +1,12 @@
 package cn.pconline.pcloud.base.entity;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
 
 public class ActivityPacket {
+
+    @Id
     private Long activityPacketId;
 
     private Long activityId;
