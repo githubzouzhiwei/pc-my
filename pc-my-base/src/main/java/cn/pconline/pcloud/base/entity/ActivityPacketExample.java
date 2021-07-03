@@ -1,6 +1,7 @@
 package cn.pconline.pcloud.base.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ActivityPacketExample {
@@ -341,6 +342,136 @@ public class ActivityPacketExample {
 
         public Criteria andStatusNotBetween(Byte value1, Byte value2) {
             addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidIsNull() {
+            addCriterion("openid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidIsNotNull() {
+            addCriterion("openid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidEqualTo(String value) {
+            addCriterion("openid =", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidNotEqualTo(String value) {
+            addCriterion("openid <>", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidGreaterThan(String value) {
+            addCriterion("openid >", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidGreaterThanOrEqualTo(String value) {
+            addCriterion("openid >=", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidLessThan(String value) {
+            addCriterion("openid <", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidLessThanOrEqualTo(String value) {
+            addCriterion("openid <=", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidLike(String value) {
+            addCriterion("openid like", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidNotLike(String value) {
+            addCriterion("openid not like", value, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidIn(List<String> values) {
+            addCriterion("openid in", values, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidNotIn(List<String> values) {
+            addCriterion("openid not in", values, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidBetween(String value1, String value2) {
+            addCriterion("openid between", value1, value2, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenidNotBetween(String value1, String value2) {
+            addCriterion("openid not between", value1, value2, "openid");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtIsNull() {
+            addCriterion("draw_at is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtIsNotNull() {
+            addCriterion("draw_at is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtEqualTo(Date value) {
+            addCriterion("draw_at =", value, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtNotEqualTo(Date value) {
+            addCriterion("draw_at <>", value, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtGreaterThan(Date value) {
+            addCriterion("draw_at >", value, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtGreaterThanOrEqualTo(Date value) {
+            addCriterion("draw_at >=", value, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtLessThan(Date value) {
+            addCriterion("draw_at <", value, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtLessThanOrEqualTo(Date value) {
+            addCriterion("draw_at <=", value, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtIn(List<Date> values) {
+            addCriterion("draw_at in", values, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtNotIn(List<Date> values) {
+            addCriterion("draw_at not in", values, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtBetween(Date value1, Date value2) {
+            addCriterion("draw_at between", value1, value2, "drawAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDrawAtNotBetween(Date value1, Date value2) {
+            addCriterion("draw_at not between", value1, value2, "drawAt");
             return (Criteria) this;
         }
     }

@@ -89,11 +89,11 @@
         <table tableName="cy_activity_detail" domainObjectName="ActivityDetail" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true"></table>
         <table tableName="cy_activity_packet_config" domainObjectName="ActivityPacketConfig" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <generatedKey column="activity_packet_config_id" sqlStatement="JDBC"/>
-        </table>
-        <table tableName="cy_activity_packet" domainObjectName="ActivityPacket" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>-->
+        <!--<table tableName="cy_activity_packet" domainObjectName="ActivityPacket" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <generatedKey column="activity_packet_id" sqlStatement="JDBC"/>
         </table>
-        <table tableName="cy_activity_record" domainObjectName="ActivityRecord" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        <table tableName="cy_activity_openid" domainObjectName="ActivityRecord" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         </table>-->
 
     </context>

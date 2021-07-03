@@ -7,6 +7,8 @@
       <arg column="activity_id" jdbcType="BIGINT" javaType="java.lang.Long" />
       <arg column="packet_amount" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="openid" jdbcType="CHAR" javaType="java.lang.String" />
+      <arg column="draw_at" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -68,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    activity_packet_id, activity_id, packet_amount, status
+    activity_packet_id, activity_id, packet_amount, status, openid, draw_at
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.pconline.pcloud.base.entity.ActivityPacketExample" >
     select
@@ -86,7 +88,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from cy_activity_packet
     where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
@@ -102,10 +104,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.pconline.pcloud.base.entity.ActivityPacket" useGeneratedKeys="true" keyProperty="activityPacketId" >
-    insert into cy_activity_packet (activity_id, packet_amount, status
-      )
-    values (#{activityId,jdbcType=BIGINT}, #{packetAmount,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}
-      )
+    insert into cy_activity_packet (activity_id, packet_amount, status, 
+      openid, draw_at)
+    values (#{activityId,jdbcType=BIGINT}, #{packetAmount,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
+      #{openid,jdbcType=CHAR}, #{drawAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.pconline.pcloud.base.entity.ActivityPacket" useGeneratedKeys="true" keyProperty="activityPacketId" >
     insert into cy_activity_packet
@@ -119,6 +121,12 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="drawAt != null" >
+        draw_at,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="activityId != null" >
@@ -129,6 +137,12 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=CHAR},
+      </if>
+      <if test="drawAt != null" >
+        #{drawAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -153,6 +167,12 @@
       <if test="record.status != null" >
         status = #{record.status,jdbcType=TINYINT},
       </if>
+      <if test="record.openid != null" >
+        openid = #{record.openid,jdbcType=CHAR},
+      </if>
+      <if test="record.drawAt != null" >
+        draw_at = #{record.drawAt,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -163,7 +183,9 @@
     set activity_packet_id = #{record.activityPacketId,jdbcType=BIGINT},
       activity_id = #{record.activityId,jdbcType=BIGINT},
       packet_amount = #{record.packetAmount,jdbcType=INTEGER},
-      status = #{record.status,jdbcType=TINYINT}
+      status = #{record.status,jdbcType=TINYINT},
+      openid = #{record.openid,jdbcType=CHAR},
+      draw_at = #{record.drawAt,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -180,6 +202,12 @@
       <if test="status != null" >
         status = #{status,jdbcType=TINYINT},
       </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=CHAR},
+      </if>
+      <if test="drawAt != null" >
+        draw_at = #{drawAt,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
   </update>
@@ -187,7 +215,9 @@
     update cy_activity_packet
     set activity_id = #{activityId,jdbcType=BIGINT},
       packet_amount = #{packetAmount,jdbcType=INTEGER},
-      status = #{status,jdbcType=TINYINT}
+      status = #{status,jdbcType=TINYINT},
+      openid = #{openid,jdbcType=CHAR},
+      draw_at = #{drawAt,jdbcType=TIMESTAMP}
     where activity_packet_id = #{activityPacketId,jdbcType=BIGINT}
   </update>
   <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">

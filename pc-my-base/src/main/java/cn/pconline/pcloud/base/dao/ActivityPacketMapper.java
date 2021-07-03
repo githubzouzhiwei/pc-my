@@ -28,5 +28,5 @@ public interface ActivityPacketMapper {
 
     int updateByPrimaryKey(ActivityPacket record);
 
-    void insertBatch(List<ActivityPacket> paramList);
+    void insertBatch(List<ActivityPacket> list);
 }

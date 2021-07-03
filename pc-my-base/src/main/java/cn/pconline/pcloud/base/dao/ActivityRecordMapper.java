@@ -1,6 +1,5 @@
 package cn.pconline.pcloud.base.dao;
 
-import cn.pconline.pcloud.base.entity.ActivityRecord;
 import cn.pconline.pcloud.base.entity.ActivityRecordExample;
 import cn.pconline.pcloud.base.entity.ActivityRecordKey;
 import java.util.List;
@@ -13,19 +12,13 @@ public interface ActivityRecordMapper {
 
     int deleteByPrimaryKey(ActivityRecordKey key);
 
-    int insert(ActivityRecord record);
+    int insert(ActivityRecordKey record);
 
-    int insertSelective(ActivityRecord record);
+    int insertSelective(ActivityRecordKey record);
 
-    List<ActivityRecord> selectByExample(ActivityRecordExample example);
+    List<ActivityRecordKey> selectByExample(ActivityRecordExample example);
 
-    ActivityRecord selectByPrimaryKey(ActivityRecordKey key);
+    int updateByExampleSelective(@Param("record") ActivityRecordKey record, @Param("example") ActivityRecordExample example);
 
-    int updateByExampleSelective(@Param("record") ActivityRecord record, @Param("example") ActivityRecordExample example);
-
-    int updateByExample(@Param("record") ActivityRecord record, @Param("example") ActivityRecordExample example);
-
-    int updateByPrimaryKeySelective(ActivityRecord record);
-
-    int updateByPrimaryKey(ActivityRecord record);
+    int updateByExample(@Param("record") ActivityRecordKey record, @Param("example") ActivityRecordExample example);
 }

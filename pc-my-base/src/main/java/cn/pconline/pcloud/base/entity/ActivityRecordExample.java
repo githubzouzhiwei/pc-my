@@ -1,7 +1,6 @@
 package cn.pconline.pcloud.base.entity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ActivityRecordExample {
@@ -232,126 +231,6 @@ public class ActivityRecordExample {
 
         public Criteria andOpenidNotBetween(String value1, String value2) {
             addCriterion("openid not between", value1, value2, "openid");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdIsNull() {
-            addCriterion("activity_packet_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdIsNotNull() {
-            addCriterion("activity_packet_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdEqualTo(Integer value) {
-            addCriterion("activity_packet_id =", value, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdNotEqualTo(Integer value) {
-            addCriterion("activity_packet_id <>", value, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdGreaterThan(Integer value) {
-            addCriterion("activity_packet_id >", value, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("activity_packet_id >=", value, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdLessThan(Integer value) {
-            addCriterion("activity_packet_id <", value, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdLessThanOrEqualTo(Integer value) {
-            addCriterion("activity_packet_id <=", value, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdIn(List<Integer> values) {
-            addCriterion("activity_packet_id in", values, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdNotIn(List<Integer> values) {
-            addCriterion("activity_packet_id not in", values, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdBetween(Integer value1, Integer value2) {
-            addCriterion("activity_packet_id between", value1, value2, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andActivityPacketIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("activity_packet_id not between", value1, value2, "activityPacketId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtIsNull() {
-            addCriterion("create_at is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtIsNotNull() {
-            addCriterion("create_at is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtEqualTo(Date value) {
-            addCriterion("create_at =", value, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtNotEqualTo(Date value) {
-            addCriterion("create_at <>", value, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtGreaterThan(Date value) {
-            addCriterion("create_at >", value, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtGreaterThanOrEqualTo(Date value) {
-            addCriterion("create_at >=", value, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtLessThan(Date value) {
-            addCriterion("create_at <", value, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtLessThanOrEqualTo(Date value) {
-            addCriterion("create_at <=", value, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtIn(List<Date> values) {
-            addCriterion("create_at in", values, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtNotIn(List<Date> values) {
-            addCriterion("create_at not in", values, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtBetween(Date value1, Date value2) {
-            addCriterion("create_at between", value1, value2, "createAt");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateAtNotBetween(Date value1, Date value2) {
-            addCriterion("create_at not between", value1, value2, "createAt");
             return (Criteria) this;
         }
     }

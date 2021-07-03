@@ -14,6 +14,7 @@ import cn.pconline.pcloud.base.enums.ActivityStatus;
 import cn.pconline.pcloud.base.service.AbstractService;
 import cn.pconline.pcloud.base.util.HelperUtil;
 import cn.pconline.pcloud.base.util.PacketUtil;
+import cn.pconline.pcloud.base.util.RedisTemplateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
@@ -31,8 +32,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ActivityService extends AbstractService<Activity, ActivityMapper> {
@@ -45,10 +48,18 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
     private ActivityPacketConfigMapper activityPacketConfigMapper;
     @Autowired
     private ActivityDetailService activityDetailService;
+    @Autowired
+    private ActivityPacketService activityPacketService;
+    @Autowired
+    public RedisTemplateUtil redisTemplateUtil;
     /**
      * 百度反地理编码查询接口
      */
     private String BAIDU_REVERSE_GEOCODING_URL = "http://api.map.baidu.com/reverse_geocoding/v3/?ak=GnPeiLQbo8nq3rsVraijPlZm5x3klTHt&output=json&coordtype=wgs84ll";
+    /**
+     * 领取红包锁key
+     */
+    private static final String DRAW_PACKET_LOCK_KEY = "draw_packet_lock";
 
     public ActivityService() {
         super(Activity.class, ActivityMapper.class);
@@ -320,7 +331,7 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
         }
     }
 
-    public String checkJoinArea(Long activityId, String location) {
+    public JSONObject checkJoinArea(Long activityId, String location) {
         Activity activity = find(activityId);
         if (activity == null) {
             return null;
@@ -355,7 +366,7 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
             result.put("msg", "本活动仅限" + joinArea + "的用户参加，但不影响您的好友助力。感谢您的支持和关注！");
         }
 
-        return result.toJSONString();
+        return result;
     }
 
     private String getArea(String location) {
@@ -382,4 +393,88 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
         return null;
     }
 
+    /**
+     * 领取红包
+     *
+     * @param activityId 活动ID
+     * @param openid     微信openid
+     * @return
+     */
+    public JSONObject drawPacket(Long activityId, String openid) {
+        if (activityId == null || activityId <= 0 || StringUtils.isBlank(openid)) {
+            return null;
+        }
+
+        Activity activity = this.find(activityId);
+        if (activity == null) {
+            JSONObject result = new JSONObject();
+            result.put("code", -1);
+            result.put("msg", "活动不存在！");
+            return result;
+        }
+
+        // 同步控制
+        String lockKey = DRAW_PACKET_LOCK_KEY + "_" + activityId;
+
+        boolean isLock;
+        int retryNum = 0;
+        while (true) {
+            isLock = redisTemplateUtil.setIfAbsent(lockKey, 0, 60, TimeUnit.SECONDS);
+            if (isLock) {
+                break;
+            }
+            retryNum++;
+            if (retryNum >= 3) {
+                break;
+            }
+            try {
+                Thread.sleep(3 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!isLock) {
+            JSONObject result = new JSONObject();
+            result.put("code", -1);
+            result.put("msg", "系统繁忙！");
+            return result;
+        }
+
+        try {
+            // 判断用户是否领取过红包
+            int count = activityPacketService.countByActivityIdAndOpenid(activityId, openid);
+            if (count > 0) {
+                JSONObject result = new JSONObject();
+                result.put("code", -1);
+                result.put("msg", "已领取过红包！");
+                return result;
+            }
+
+            // 随机获取待领取红包
+            List<ActivityPacket> activityPackets = activityPacketService.listNotDraw(activityId);
+            if (activityPackets == null || activityPackets.size() == 0) {
+                JSONObject result = new JSONObject();
+                result.put("code", -1);
+                result.put("msg", "活动红包已领取完！");
+                return result;
+            }
+
+            Collections.shuffle(activityPackets);// 打乱顺序
+
+            ActivityPacket activityPacket = activityPackets.get(0);
+            activityPacket.setStatus((byte) 1);// 改变状态为已领取
+            activityPacket.setOpenid(openid);
+            activityPacket.setDrawAt(new Date());
+            activityPacketService.update(activityPacket);
+
+            JSONObject result = new JSONObject();
+            result.put("code", 0);
+            result.put("msg", "领取红包成功！");
+
+            return result;
+        } finally {
+            redisTemplateUtil.del(lockKey);
+        }
+    }
 }

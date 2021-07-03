@@ -1,10 +1,8 @@
 package cn.pconline.pcloud.base.entity;
 
-import org.springframework.data.annotation.Id;
+import java.util.Date;
 
 public class ActivityPacket {
-
-    @Id
     private Long activityPacketId;
 
     private Long activityId;
@@ -13,11 +11,17 @@ public class ActivityPacket {
 
     private Byte status;
 
-    public ActivityPacket(Long activityPacketId, Long activityId, Integer packetAmount, Byte status) {
+    private String openid;
+
+    private Date drawAt;
+
+    public ActivityPacket(Long activityPacketId, Long activityId, Integer packetAmount, Byte status, String openid, Date drawAt) {
         this.activityPacketId = activityPacketId;
         this.activityId = activityId;
         this.packetAmount = packetAmount;
         this.status = status;
+        this.openid = openid;
+        this.drawAt = drawAt;
     }
 
     public ActivityPacket() {
@@ -54,5 +58,21 @@ public class ActivityPacket {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid == null ? null : openid.trim();
+    }
+
+    public Date getDrawAt() {
+        return drawAt;
+    }
+
+    public void setDrawAt(Date drawAt) {
+        this.drawAt = drawAt;
     }
 }
