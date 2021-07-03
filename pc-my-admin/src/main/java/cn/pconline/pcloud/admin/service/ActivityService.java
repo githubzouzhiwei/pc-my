@@ -14,13 +14,21 @@ import cn.pconline.pcloud.base.enums.ActivityStatus;
 import cn.pconline.pcloud.base.service.AbstractService;
 import cn.pconline.pcloud.base.util.HelperUtil;
 import cn.pconline.pcloud.base.util.PacketUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +45,10 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
     private ActivityPacketConfigMapper activityPacketConfigMapper;
     @Autowired
     private ActivityDetailService activityDetailService;
+    /**
+     * 百度反地理编码查询接口
+     */
+    private String BAIDU_REVERSE_GEOCODING_URL = "http://api.map.baidu.com/reverse_geocoding/v3/?ak=GnPeiLQbo8nq3rsVraijPlZm5x3klTHt&output=json&coordtype=wgs84ll";
 
     public ActivityService() {
         super(Activity.class, ActivityMapper.class);
@@ -307,4 +319,67 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
             activityDetailService.update(activityDetail);
         }
     }
+
+    public String checkJoinArea(Long activityId, String location) {
+        Activity activity = find(activityId);
+        if (activity == null) {
+            return null;
+        }
+
+        if (StringUtils.isBlank(location)) {
+            return null;
+        }
+
+        String joinArea = activity.getJoinArea();
+        if (StringUtils.isBlank(joinArea)) {
+            return null;
+        }
+
+        // 获取用户地区
+        String userArea = this.getArea(location);
+        boolean canJoin = false;
+        String[] joinAreas = joinArea.split(",");
+        for (String area : joinAreas) {
+            if (area.equals(userArea)) {
+                canJoin = true;
+                break;
+            }
+        }
+
+        JSONObject result = new JSONObject();
+
+        if (canJoin) {
+            result.put("code", 0);
+        } else {
+            result.put("code", -1);
+            result.put("msg", "本活动仅限" + joinArea + "的用户参加，但不影响您的好友助力。感谢您的支持和关注！");
+        }
+
+        return result.toJSONString();
+    }
+
+    private String getArea(String location) {
+        HttpClient httpClient = new DefaultHttpClient();
+        String url = BAIDU_REVERSE_GEOCODING_URL + "&location=" + location;
+        HttpGet httpGet = new HttpGet(url);
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            if (httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
+                String result = EntityUtils.toString(httpResponse.getEntity());
+                System.out.println("result==>" + result);
+                if (StringUtils.isNotBlank(result) && result.startsWith("{")) {
+                    JSONObject jsonObject = JSON.parseObject(result);
+                    int status = jsonObject.getIntValue("status");
+                    if (status == 0) {
+                        return jsonObject.getJSONObject("result").getString("formatted_address");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
