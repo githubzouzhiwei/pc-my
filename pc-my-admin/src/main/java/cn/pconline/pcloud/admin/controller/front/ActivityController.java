@@ -37,10 +37,6 @@ public class ActivityController {
     @GetMapping("/checkJoinArea/{activityId}")
     @ResponseBody
     public JSONObject checkJoinArea(@PathVariable("activityId") Long activityId, String location) {
-        if (activityId == null || activityId <= 0 || StringUtils.isBlank(location)) {
-            return null;
-        }
-
         return activityService.checkJoinArea(activityId, location);
     }
 

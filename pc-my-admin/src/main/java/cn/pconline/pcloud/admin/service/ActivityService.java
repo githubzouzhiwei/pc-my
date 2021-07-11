@@ -337,23 +337,31 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
     }
 
     public JSONObject checkJoinArea(Long activityId, String location) {
+        JSONObject result = new JSONObject();
+
+        if (activityId == null || activityId <= 0 || StringUtils.isBlank(location)) {
+            result.put("code", -1);
+            result.put("msg", "参数错误！");
+            return result;
+        }
+
         Activity activity = find(activityId);
         if (activity == null) {
-            return null;
+            result.put("code", -1);
+            result.put("msg", "活动不存在！");
+            return result;
         }
 
-        if (StringUtils.isBlank(location)) {
-            return null;
-        }
-
-        String joinArea = activity.getJoinArea();
+        String joinArea = activity.getJoinArea();// 没有限定参与地区
         if (StringUtils.isBlank(joinArea)) {
-            return null;
+            result.put("code", 0);
+            result.put("canJoin", 1);
+            return result;
         }
 
+        boolean canJoin = false;// 是否可以参与活动
         // 获取用户地区
         String userArea = this.getArea(location);
-        boolean canJoin = false;
         String[] joinAreas = joinArea.split(",");
         for (String area : joinAreas) {
             if (area.equals(userArea)) {
@@ -362,12 +370,9 @@ public class ActivityService extends AbstractService<Activity, ActivityMapper> {
             }
         }
 
-        JSONObject result = new JSONObject();
+        result.put("canJoin", canJoin ? 1 : 0);
 
-        if (canJoin) {
-            result.put("code", 0);
-        } else {
-            result.put("code", -1);
+        if (!canJoin) {
             result.put("msg", "本活动仅限" + joinArea + "的用户参加，但不影响您的好友助力。感谢您的支持和关注！");
         }
 
